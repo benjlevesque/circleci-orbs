@@ -1,0 +1,61 @@
+version: 2.1
+
+description: 'A command to add a comment to a github PR'
+commands: 
+  pr-comment:
+    parameters:
+      comment:
+        type: string
+        description: "The comment to add to the PR"
+      pr:
+        type: string
+        description: "The PR number or URL"
+        default: $CIRCLE_PULL_REQUEST
+      maxComments:
+        type: integer
+        description: Max nb of comments per PR
+        default: 1
+    steps:
+      - run:
+          name: Install Ruby
+          command: sudo apt-get install ruby-full
+      - run:
+          name: Install GHI
+          command: |
+            curl -sL https://raw.githubusercontent.com/stephencelis/ghi/master/ghi > ghi
+            chmod 755 ghi 
+            sudo mv ghi /usr/local/bin
+      - run: 
+          name: Check Token
+          command: |
+            if [[ -z "${GHI_TOKEN}" ]]; then
+              echo "GHI_TOKEN not set"
+              /bin/false
+            fi
+      - run:
+          name: Send Comment
+          command: |
+            GH_LOGIN=$(curl https://api.github.com/user\?access_token\=$GHI_TOKEN | jq '.login' --raw-output)
+            echo "Authenticated with $GH_LOGIN"
+            PR_URL=<< parameters.pr >>
+            PR_ID=${PR_URL##*/}
+            echo "PR_ID=$PR_ID"
+            if [ -z $PR_ID ]; then
+              echo "No PR found, skipping"
+            else
+              if [ $(ghi comment --list $PR_ID | grep -c $GH_LOGIN) -ge << parameters.maxComments >> ]; then 
+                echo "Already commented, skip"
+              else
+                ghi comment -m "<< parameters.comment >>"  $PR_ID
+              fi
+            fi
+
+
+jobs:
+  build:
+    docker:
+      - image: 'circleci/python:2.7'
+    steps:
+      - checkout
+      - pr-comment:
+          comment: "Hello"
