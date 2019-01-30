@@ -1,0 +1,34 @@
+version: 2.1
+
+orbs:
+  orb-tools: circleci/orb-tools@7.3.0
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - orb-tools/lint
+      - orb-tools/pack:
+          requires:
+            - orb-tools/lint
+      - orb-tools/publish-dev:
+          orb-name: benjlevesque/pr-comment
+          requires:
+            - orb-tools/pack
+      # - orb-tools/trigger-integration-workflow:
+      #     filters:
+      #       branches:
+      #         ignore: master
+      #     name: trigger-integration-dev
+      #     requires:
+      #       - orb-tools/publish-dev
+      #     ssh-fingerprints: your-SSH-fingerprints
+      # - orb-tools/trigger-integration-workflow:
+      #     filters:
+      #       branches:
+      #         only: master
+      #     name: trigger-integration-master
+      #     requires:
+      #       - orb-tools/publish-dev
+      #     ssh-fingerprints: your-SSH-fingerprints
+      #     tag: master
