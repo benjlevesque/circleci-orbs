@@ -1,3 +1,4 @@
+---
 version: 2.1
 
 description: 'A set of commands for publishing Docker image to AWS ECR and managing AWS EKS'
@@ -5,8 +6,8 @@ orbs:
   aws-cli: circleci/aws-cli@0.0.1
   aws-ecr: circleci/aws-ecr@0.0.4
 executors:
-  default: aws-ecr/default 
-commands: 
+  default: aws-ecr/default
+commands:
   k8s-install:
     steps:
       - run:
@@ -55,11 +56,11 @@ jobs:
           command: "docker build -f << parameters.dockerfile >> << parameters.path >>"
   build_and_push_image:
     executor: aws-ecr/default
-    parameters: 
+    parameters:
       repo:
         type: string
         description: Name of an Amazon ECR repository (whithout URL)
-      tag: 
+      tag:
         type: string
         description: Tag (latest is automatically applied)
     steps:
@@ -75,12 +76,12 @@ jobs:
       - aws-ecr/push-image:
           repo: << parameters.repo >>
           tag: latest
-      - run: 
+      - run:
           name: Tag & push image tag '<< parameters.tag >>'
           command: |
             TAG="<< parameters.tag >>"
-            if [[ -n "$TAG" ]]; then 
-              IMG="$AWS_ECR_ACCOUNT_URL/<< parameters.repo >>"  
+            if [[ -n "$TAG" ]]; then
+              IMG="$AWS_ECR_ACCOUNT_URL/<< parameters.repo >>"
               echo $IMG
               docker tag "$IMG:latest" "$IMG:$TAG"
               docker push "$IMG:$TAG"
@@ -116,7 +117,7 @@ jobs:
         default: latest
     steps:
       # required in case the tag is based on a file of the repo
-      - checkout 
+      - checkout
       - k8s-install
       - k8s-configure:
           cluster: << parameters.cluster >>

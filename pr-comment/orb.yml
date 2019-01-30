@@ -1,7 +1,8 @@
+---
 version: 2.1
 
 description: 'A command to add a comment to a github PR'
-commands: 
+commands:
   pr-comment:
     parameters:
       comment:
@@ -23,9 +24,9 @@ commands:
           name: Install GHI
           command: |
             curl -sL https://raw.githubusercontent.com/stephencelis/ghi/master/ghi > ghi
-            chmod 755 ghi 
+            chmod 755 ghi
             sudo mv ghi /usr/local/bin
-      - run: 
+      - run:
           name: Check Token
           command: |
             if [[ -z "${GHI_TOKEN}" ]]; then
@@ -43,7 +44,7 @@ commands:
             if [ -z $PR_ID ]; then
               echo "No PR found, skipping"
             else
-              if [ $(ghi comment --list $PR_ID | grep -c $GH_LOGIN) -ge << parameters.maxComments >> ]; then 
+              if [ $(ghi comment --list $PR_ID | grep -c $GH_LOGIN) -ge << parameters.maxComments >> ]; then
                 echo "Already commented, skip"
               else
                 ghi comment -m "<< parameters.comment >>"  $PR_ID
