@@ -2,8 +2,17 @@
 version: 2.1
 
 description: 'A command to add a comment to a github PR'
+examples:
+  basic:
+    description: |
+      Use the comment command to add comments to a Github PR.
+    usage:
+      version: 2.1
+      orbs:
+        orb-tools: benjlevesque/pr-comment
+            
 commands:
-  pr-comment:
+  comment:
     parameters:
       comment:
         type: string
