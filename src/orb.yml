@@ -10,7 +10,7 @@ examples:
       version: 2.1
       orbs:
         orb-tools: benjlevesque/pr-comment
-            
+
 commands:
   comment:
     parameters:
