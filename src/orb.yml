@@ -9,7 +9,15 @@ examples:
     usage:
       version: 2.1
       orbs:
-        orb-tools: benjlevesque/pr-comment
+        pr-comment: benjlevesque/pr-comment
+      jobs:
+        build:
+          docker:
+            - image: 'circleci/python:2.7'
+          steps:
+            - checkout
+            - pr-comment/comment:
+                comment: "Hello"
 
 commands:
   comment:
@@ -60,12 +68,3 @@ commands:
               fi
             fi
 
-
-jobs:
-  build:
-    docker:
-      - image: 'circleci/python:2.7'
-    steps:
-      - checkout
-      - pr-comment:
-          comment: "Hello"
