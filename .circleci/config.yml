@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@7.3.0
+  orb-tools: circleci/orb-tools@8.27.6
 
 workflows:
   version: 2
@@ -23,7 +23,6 @@ workflows:
           name: trigger-integration-dev
           requires:
             - orb-tools/publish-dev
-          ssh-fingerprints: f9:e0:22:5d:17:9e:50:03:60:c2:60:5a:1c:33:67:20
       - orb-tools/trigger-integration-workflow:
           filters:
             branches:
@@ -31,8 +30,7 @@ workflows:
           name: trigger-integration-master
           requires:
             - orb-tools/publish-dev
-          ssh-fingerprints: f9:e0:22:5d:17:9e:50:03:60:c2:60:5a:1c:33:67:20
-          tag: master
+
   cd:
     jobs:
       - orb-tools/dev-promote-prod:
@@ -52,12 +50,4 @@ workflows:
           name: dev-promote-minor
           orb-name: benjlevesque/pr-comment
           release: minor
-      - orb-tools/dev-promote-prod:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /master-major.*/
-          name: dev-promote-major
-          orb-name: benjlevesque/pr-comment
-          release: major
+
