@@ -36,7 +36,7 @@ commands:
       - run:
           name: Send Comment
           command: |
-            GH_LOGIN=$(curl -sS https://api.github.com/user\?access_token\=$GHI_TOKEN | jq '.login' --raw-output)
+            GH_LOGIN=$(curl -sS -H 'Authorization: token $GHI_TOKEN' https://api.github.com/user/repos | jq '.login' --raw-output)
             echo "Authenticated with $GH_LOGIN"
             PR_URL=<< parameters.pr >>
             PR_ID=${PR_URL##*/}
