@@ -3,40 +3,17 @@ version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@8.27.6
-  cli: circleci/circleci-cli@0.1.7
-
-
-jobs:
-  checkout:
-    docker: 
-      - image: circleci/python:3.6.4
-    steps:
-      - checkout
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
 
 workflows:
   version: 2
   ci:
     jobs:
-      - checkout
-      - orb-tools/lint:
-          checkout: false
-          attach-workspace: true
-          requires:
-            - checkout
+      - orb-tools/lint
       - orb-tools/pack:
           requires:
             - orb-tools/lint
-          checkout: false
-          attach-workspace: true
       - orb-tools/publish-dev:
           orb-name: benjlevesque/pr-comment
-          checkout: false
-          attach-workspace: true
           requires:
             - orb-tools/pack
       - orb-tools/trigger-integration-workflow:
@@ -44,8 +21,6 @@ workflows:
             branches:
               ignore: master
           name: trigger-integration-dev
-          checkout: false
-          attach-workspace: true
           requires:
             - orb-tools/publish-dev
       - orb-tools/trigger-integration-workflow:
@@ -53,23 +28,19 @@ workflows:
             branches:
               only: master
           name: trigger-integration-master
-          checkout: false
-          attach-workspace: true
           requires:
             - orb-tools/publish-dev
+          tag: master
   cd:
     jobs:
-      - checkout:
+      - orb-tools/dev-promote-prod:
           filters:
             branches:
               ignore: /.*/
             tags:
               only: /master-patch.*/
-      - orb-tools/dev-promote-prod:
           name: dev-promote-patch
           orb-name: benjlevesque/pr-comment
-          requires:
-            - checkout
       - orb-tools/dev-promote-prod:
           filters:
             branches:
