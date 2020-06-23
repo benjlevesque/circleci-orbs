@@ -16,23 +16,6 @@ workflows:
           orb-name: benjlevesque/pr-comment
           requires:
             - orb-tools/pack
-      - orb-tools/trigger-integration-workflow:
-          filters:
-            branches:
-              ignore: master
-          name: trigger-integration-dev
-          requires:
-           - orb-tools/publish-dev
-          ssh-fingerprints: f9:e0:22:5d:17:9e:50:03:60:c2:60:5a:1c:33:67:20
-      - orb-tools/trigger-integration-workflow:
-          filters:
-            branches:
-              only: master
-          name: trigger-integration-master
-          requires:
-          - orb-tools/publish-dev
-          ssh-fingerprints: f9:e0:22:5d:17:9e:50:03:60:c2:60:5a:1c:33:67:20
-          tag: master
   cd:
     jobs:
       - orb-tools/dev-promote-prod:
