@@ -21,14 +21,21 @@ workflows:
   version: 2
   ci:
     jobs:
+      - checkout
       - orb-tools/lint:
           checkout: false
           attach-workspace: true
+          requires:
+            - checkout
       - orb-tools/pack:
           requires:
             - orb-tools/lint
+          checkout: false
+          attach-workspace: true
       - orb-tools/publish-dev:
           orb-name: benjlevesque/pr-comment
+          checkout: false
+          attach-workspace: true
           requires:
             - orb-tools/pack
       - orb-tools/trigger-integration-workflow:
@@ -36,6 +43,8 @@ workflows:
             branches:
               ignore: master
           name: trigger-integration-dev
+          checkout: false
+          attach-workspace: true
           requires:
             - orb-tools/publish-dev
       - orb-tools/trigger-integration-workflow:
@@ -43,10 +52,13 @@ workflows:
             branches:
               only: master
           name: trigger-integration-master
+          checkout: false
+          attach-workspace: true
           requires:
             - orb-tools/publish-dev
   cd:
     jobs:
+      - checkout
       - orb-tools/dev-promote-prod:
           filters:
             branches:
