@@ -8,7 +8,9 @@ workflows:
   version: 2
   ci:
     jobs:
-      - orb-tools/lint
+      - checkout
+      - orb-tools/lint:
+          checkout: false
       - orb-tools/pack:
           requires:
             - orb-tools/lint
