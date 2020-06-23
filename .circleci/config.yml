@@ -3,13 +3,27 @@ version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@8.27.6
+  cli: circleci/circleci-cli@0.1.7
+
+
+jobs:
+  checkout:
+    executor: cli/default
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: worspace
+          paths:
+            - .
+
 
 workflows:
   version: 2
   ci:
     jobs:
-      # - orb-tools/lint:
-      #     checkout: false
+      - orb-tools/lint:
+          checkout: false
+          attach-workspace: true
       - orb-tools/pack:
           requires:
             - orb-tools/lint
