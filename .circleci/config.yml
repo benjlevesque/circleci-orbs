@@ -43,6 +43,7 @@ workflows:
               only: /master-patch.*/
           name: dev-promote-patch
           orb-name: benjlevesque/pr-comment
+          ssh-fingerprints: 74:7b:df:ee:12:ac:c7:f6:20:3a:92:18:b8:d8:03:88
       - orb-tools/dev-promote-prod:
           filters:
             branches:
@@ -52,6 +53,7 @@ workflows:
           name: dev-promote-minor
           orb-name: benjlevesque/pr-comment
           release: minor
+          ssh-fingerprints: 74:7b:df:ee:12:ac:c7:f6:20:3a:92:18:b8:d8:03:88
       - orb-tools/dev-promote-prod:
           filters:
             branches:
@@ -61,3 +63,4 @@ workflows:
           name: dev-promote-major
           orb-name: benjlevesque/pr-comment
           release: major
+          ssh-fingerprints: 74:7b:df:ee:12:ac:c7:f6:20:3a:92:18:b8:d8:03:88
